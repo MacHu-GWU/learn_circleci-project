@@ -4,11 +4,11 @@ commands:
   say_hello: # a reusable command with parameters
     description: ""
     parameters:
-      name:
+      yourname:
         type: string
         default: "World"
     steps:
-      - run: echo "Hello << parameters.name >>" # << paramters.$parameterName >> is variable replacement injection
+      - run: echo "Hello << parameters.yourname >>" # << paramters.$parameterName >> is variable replacement injection
 
 jobs:
   my_job:
@@ -16,7 +16,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - say_hello: # call command "sayHello", pass parameters as key value pair
-        name: Alice
+        yourname: Alice
 
 workflows:
   my_workflow:
