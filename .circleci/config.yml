@@ -1,41 +1,24 @@
 # reference:
-# https://circleci.com/docs/2.0/reusing-config/#parameter-types
+# - https://circleci.com/docs/2.0/reusing-config/#using-the-parameters-declaration
 version: 2.1
 
 commands: 
-  print_param_values: # a reusable command with parameters
-    description: "demonstrate how does different type of parameter injection work"
+  say_hello: # a reusable command with parameters
+    description: "demonstarte a simple resuable command with parameters"
     parameters:
-      a_string:
+      yourname: # watchout, some key is reserved keyword, and cannot be used as parameter name
         type: string
-        default: "Hello World"
-      a_integer:
-        type: integer
-        default: 200
-      # a_boolean:
-      #   type: boolean
-      #   default: yes
-      # a_enum:
-      #   type: enum
-      #   enum: ["a", "b", "c"]
+        default: "World"
     steps:
-      - run: echo "<< parameters.a_string >>"
-      - run: echo "<< parameters.a_integer >>"
-      # - run: echo << parameters.a_boolean >>
-      # - run: echo << parameters.a_enum >>
+      - run: echo "Hello << parameters.yourname >>" # << paramters.$parameterName >> is variable replacement injection
 
 jobs:
   my_job:
     docker:
       - image: cimg/base:stable
     steps:
-      # if you don't want to pass any parameters (use default), you should do ``- print_param_values``
-      # if you need to pass parameters value, you should do ``- print_param_values``
-      - print_param_values: # call command "print_param_values", pass parameters as key value pair
-        a_string: Hello Alice
-        # a_integer: 200
-        # a_boolean: yes
-        # a_enum: c
+      - say_hello: # call command "sayHello", pass parameters as key value pair
+        yourname: "Alice"
 
 workflows:
   my_workflow:
