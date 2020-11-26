@@ -1,35 +1,24 @@
 # reference:
-# https://circleci.com/docs/2.0/reusing-config/#parameter-types
+# - https://circleci.com/docs/2.0/reusing-config/#using-the-parameters-declaration
 version: 2.1
 
 commands: 
-  print_param_values: # a reusable command with parameters
+  say_hello: # a reusable command with parameters
     description: ""
     parameters:
-      a_string:
+      yourname: # watchout, some key is reserved keyword, and cannot be used as parameter name
         type: string
-      a_integer:
-        type: integer
-      a_boolean:
-        type: boolean
-      a_enum:
-        type: enum
+        default: "World"
     steps:
-      - run: echo << parameters.a_string >>
-      - run: echo << parameters.a_integer >>
-      - run: echo << parameters.a_boolean >>
-      - run: echo << parameters.a_enum >>
+      - run: echo "Hello << parameters.yourname >>" # << paramters.$parameterName >> is variable replacement injection
 
 jobs:
   my_job:
     docker:
       - image: cimg/base:stable
     steps:
-      - print_param_values: # call command "print_param_values", pass parameters as key value pair
-        a_string: Hello World
-        a_integer: 200
-        a_boolean: yes
-        a_enum: ["a", "b", "c"]
+      - say_hello: # call command "sayHello", pass parameters as key value pair
+        yourname: Alice
 
 workflows:
   my_workflow:
