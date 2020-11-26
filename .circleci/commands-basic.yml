@@ -1,21 +1,21 @@
-versions: 2.1
+version: 2.1
 
-commands:
-  sayHello:
+commands: 
+  sayHello: # a reusable command with parameters
     description: ""
     parameters:
       name:
         type: string
         default: "World"
     steps:
-      - run: echo "Hello << parameters.name >>"
+      - run: echo "Hello << parameters.name >>" # << paramters.$parameterName >> is variable replacement injection
 
 jobs:
   myJob:
     docker:
       - image: cimg/base:stable
     steps:
-      - sayHello:
+      - sayHello: # call command "sayHello", pass parameters as key value pair
         name: Alice
 
 workflows:
