@@ -14,6 +14,7 @@ commands:
         type: boolean
       a_enum:
         type: enum
+        enum: ["a", "b", "c"]
     steps:
       - run: echo << parameters.a_string >>
       - run: echo << parameters.a_integer >>
@@ -29,7 +30,7 @@ jobs:
         a_string: Hello World
         a_integer: 200
         a_boolean: yes
-        a_enum: ["a", "b", "c"]
+        a_enum: "c"
 
 workflows:
   my_workflow:
