@@ -1,20 +1,20 @@
 version: 2.1
 commands: # a reusable command with parameters
-  greeting:
-    parameters:
-      yourname:
-        default: "world"
-        type: string
-    steps:
-      - run: echo "Hello <<parameters.yourname>>"
+   greeting:
+      parameters:
+         yourname:
+            default: "world"
+            type: string
+      steps:
+         - run: echo "Hello <<parameters.yourname>>"
 jobs:
-  my-job:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - greeting:
-        yourname: "My-Name"
+   my-job:
+      docker:
+         - image: cimg/base:stable
+      steps:
+         - greeting:
+            yourname: "My-Name"
 workflows:
-  my-workflow:
-    jobs:
-      - my-job 
+   my-workflow:
+      jobs:
+         - my-job 
