@@ -20,4 +20,5 @@ jobs:
 
 workflows:
   my_workflow:
-    - my_job
+    jobs:
+      - my_job
