@@ -9,19 +9,19 @@ commands:
       a_string:
         type: string
         default: Hello world
-      a_integer:
-        type: integer
-        default: 200
-      a_boolean:
-        type: boolean
-        default: yes
+      # a_integer:
+      #   type: integer
+      #   default: 200
+      # a_boolean:
+      #   type: boolean
+      #   default: yes
       # a_enum:
       #   type: enum
       #   enum: ["a", "b", "c"]
     steps:
       - run: echo << parameters.a_string >>
-      - run: echo << parameters.a_integer >>
-      - run: echo << parameters.a_boolean >>
+      # - run: echo << parameters.a_integer >>
+      # - run: echo << parameters.a_boolean >>
       # - run: echo << parameters.a_enum >>
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - print_param_values: # call command "print_param_values", pass parameters as key value pair
-        # a_string: Hello World
+        a_string: Hello World
         # a_integer: 200
         # a_boolean: yes
         # a_enum: c
