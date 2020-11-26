@@ -8,10 +8,13 @@ commands:
     parameters:
       a_string:
         type: string
+        default: Hello world
       a_integer:
         type: integer
+        default: 200
       a_boolean:
         type: boolean
+        default: yes
       # a_enum:
       #   type: enum
       #   enum: ["a", "b", "c"]
@@ -27,9 +30,9 @@ jobs:
       - image: cimg/base:stable
     steps:
       - print_param_values: # call command "print_param_values", pass parameters as key value pair
-        a_string: Hello World
-        a_integer: 200
-        a_boolean: yes
+        # a_string: Hello World
+        # a_integer: 200
+        # a_boolean: yes
         # a_enum: c
 
 workflows:
