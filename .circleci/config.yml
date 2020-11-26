@@ -5,8 +5,8 @@ commands: # a reusable command with parameters
       yourname:
         default: "world"
         type: string
-      steps:
-        - run: echo "Hello <<parameters.yourname>>"
+    steps:
+      - run: echo "Hello <<parameters.yourname>>"
 jobs:
   my-job:
     docker:
