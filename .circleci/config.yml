@@ -10,7 +10,7 @@ commands:
         default: "World"
         type: string
     steps:
-      - run: echo "Hello << parameters.yourname >>" # << paramters.$parameterName >> is variable replacement injection
+      - run: echo "Hello <<parameters.yourname>>" # << paramters.$parameterName >> is variable replacement injection
 
 jobs:
   my_job:
