@@ -29,7 +29,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - print_param_values: # call command "print_param_values", pass parameters as key value pair
+      - print_param_values # call command "print_param_values", pass parameters as key value pair
         # a_string: Hello World
         # a_integer: 200
         # a_boolean: yes
