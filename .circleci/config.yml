@@ -8,7 +8,7 @@ commands:
     parameters:
       a_string:
         type: string
-        default: "Hello world"
+        default: "Hello World"
       a_integer:
         type: integer
         default: 200
@@ -32,7 +32,7 @@ jobs:
       # if you don't want to pass any parameters (use default), you should do ``- print_param_values``
       # if you need to pass parameters value, you should do ``- print_param_values``
       - print_param_values: # call command "print_param_values", pass parameters as key value pair
-        a_string: "Hello Alice"
+        a_string: Hello Alice
         # a_integer: 200
         # a_boolean: yes
         # a_enum: c
