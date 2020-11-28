@@ -1,17 +1,16 @@
 version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@1.3.1
+  aws-cli: circleci/aws-cli@1.3.1 # use circleci/aws-cli orb
 jobs:
   aws-cli-example:
     executor: aws-cli/default
-        python-version: 3.6.8
-
+        python-version: 3.6.12-node # (optional) Select your python version or any of the available tags here: https://hub.docker.com/r/cimg/python, default 3.8-node
     steps:
-      - checkout
-      - aws-cli/install
+      # - checkout
+      - aws-cli/install # install aws-cli if not available
       - run: aws s3 ls
 workflows:
   aws-cli:
     jobs:
       - aws-cli-example:
-          context: aws-eq-sanhe-admin
+          context: aws-eq-sanhe-admin # inject AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
