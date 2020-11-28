@@ -4,6 +4,8 @@ orbs:
 jobs:
   aws-cli-example:
     executor: aws-cli/default
+        python-version: 3.6.8
+
     steps:
       - checkout
       - aws-cli/install
@@ -13,4 +15,3 @@ workflows:
     jobs:
       - aws-cli-example:
           context: aws-eq-sanhe-admin
-
