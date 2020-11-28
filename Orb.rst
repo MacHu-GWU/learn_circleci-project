@@ -16,7 +16,7 @@ Orb 有官方的 registry 平台. 该平台跟 dockerHub 很像, 就相当于 do
 
 **Orb 是如何工作的**
 
-Orb 在被官方注册过之后, 标识符通常为 ``${OrganzationName}/${OrbName}``. 你可以用这个标识符来 Import Orb. 然后就可以在你的 CircleCI pipeline script 中使用 Orb 定义过的 Job 和 Command 了. 如果你已经了解 Job 和 Command 在 pipeline script 中的功能和重要性, 那就很容易理解了.
+Orb 在被官方注册过之后, 标识符通常为 ``${OrganzationName}/${OrbName}``. 你可以用这个标识符来 Import Orb. 然后就可以在你的 CircleCI pipeline script 中使用 Orb 定义过的 Job, Command 和 Executor 了. 如果你已经了解 Job, Command 和 Executor 在 pipeline script 中的功能和重要性, 那就很容易理解了.
 
 ** CircleCI 中的核心概念**
 
