@@ -11,5 +11,5 @@ workflows:
   aws-cli:
     jobs:
       - aws-cli-example:
-          context: aws-eq-sanhe-admiin
+          context: aws-eq-sanhe-admin
 
