@@ -1,48 +1,15 @@
-# reference:
-# https://circleci.com/docs/2.0/reusing-config/#parameter-types
 version: 2.1
-
-commands: 
-  print_param_values: # a reusable command with parameters, deomonstrate how value interpolation works for different type
-    description: "demonstrate how does different type of parameter injection work"
-    parameters:
-      a_string:
-        type: string
-        default: "Hello World"
-      a_integer:
-        type: integer
-        default: 200
-      a_boolean:
-        type: boolean
-        default: yes
-      a_enum:
-        type: enum
-        enum: ["a", "b", "c"]
-    steps:
-      - run: echo "<< parameters.a_string >>"
-      - run: echo "<< parameters.a_integer >>"
-      - run: echo << parameters.a_boolean >>
-      - run: echo << parameters.a_enum >>
-
+orbs:
+  aws-cli: circleci/aws-cli@1.3.1
 jobs:
-  my_job:
-    docker:
-      - image: cimg/base:stable
+  aws-cli-example:
+    executor: aws-cli/default
     steps:
-      # if you don't want to pass any parameters (use default), you should do ``- print_param_values``
-      # if you need to pass parameters value, you should do ``- print_param_values``
-      # WATCH OUT: you need double indent for
-      # - key:
-      #     more_key1:
-      #     more_key2:
-      #     ...
-      - print_param_values: # call command "print_param_values", pass parameters as key value pair
-          a_string: Hello Alice
-          a_integer: 400
-          a_boolean: yes
-          a_enum: c
-
+      - checkout
+      - run: aws s3 ls
 workflows:
-  my_workflow:
+  aws-cli:
     jobs:
-      - my_job
+      - aws-cli-example:
+          context: aws-eq-sanhe-admiin
+
