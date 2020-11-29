@@ -29,6 +29,7 @@ jobs:
   test:
     executor: python-docker
     steps:
+      - checkout
       - restore_cache: # restore venv cache
           keys:
             - venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }}
