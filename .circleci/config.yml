@@ -1,18 +1,37 @@
 version: 2.1
-orbs:
-  aws-cli: circleci/aws-cli@1.3.1 # use circleci/aws-cli orb
+
+executors:
+  python-docker:
+    docker:
+      - image: cimg/python:3.6.12
+
 jobs:
-  aws-cli-example:
-    # if passing no parameter, use this syntax executor: aws-cli/default
-    executor: # use parameterized executor
-      name: aws-cli/default
-      python-version: "3.6.12-node" # (optional) Select your python version or any of the available tags here: https://hub.docker.com/r/cimg/python, default 3.8-node
+  setup-python-virtualenv:
     steps:
-      # - checkout
-      - aws-cli/install # install aws-cli if not available
-      - run: aws s3 ls
+      - checkout
+      - run:
+          name: setup python virtualenv
+          command: |
+            virtualenv venv
+            source venv/bin/activate
+            pip install python-dateutil
+      - save_cache:
+          key: venv-cache
+          paths:
+            - venv
+  test:
+    steps:
+      - restore_cache:
+          keys:
+            - venv-cache
+      - run:
+          name: verify if venv exists and dependencies are installed
+          command: |
+            ls venv/bin
+            venv/bin/pip list
+
 workflows:
-  aws-cli:
+  my-workflow:
     jobs:
-      - aws-cli-example:
-          context: aws-eq-sanhe-admin # inject AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+      - setup-python-virtualenv
+      - test
