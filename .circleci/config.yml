@@ -7,6 +7,7 @@ executors:
 
 jobs:
   setup-python-virtualenv:
+    executor: python-docker
     steps:
       - checkout
       - run:
@@ -20,6 +21,7 @@ jobs:
           paths:
             - venv
   test:
+    executor: python-docker
     steps:
       - restore_cache:
           keys:
