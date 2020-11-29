@@ -36,4 +36,6 @@ workflows:
   my-workflow:
     jobs:
       - setup-python-virtualenv
-      - test
+      - test:
+          requires:
+            - setup-python-virtualenv
