@@ -1,3 +1,7 @@
+# This example demonstrate how to cache a directory or files for future use
+#
+# reference
+# https://circleci.com/docs/2.0/caching/
 version: 2.1
 
 executors:
@@ -6,6 +10,7 @@ executors:
       - image: cimg/python:3.6.12
 
 jobs:
+  # create virtualenv, insttall dependencies, store to cache for future use
   setup-python-virtualenv:
     executor: python-docker
     steps:
@@ -15,18 +20,19 @@ jobs:
           command: |
             virtualenv venv
             source venv/bin/activate
-            pip install python-dateutil
+            pip install -r .circleci/cache-dependencies/requirements.txt
       - save_cache:
-          key: venv-cache
+          key: venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }}
           paths:
             - venv
+    
   test:
     executor: python-docker
     steps:
-      - restore_cache:
+      - restore_cache: # restore venv cache
           keys:
-            - venv-cache
-      - run:
+            - venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }}
+      - run: # run some test command
           name: verify if venv exists and dependencies are installed
           command: |
             ls venv/bin
@@ -36,6 +42,6 @@ workflows:
   my-workflow:
     jobs:
       - setup-python-virtualenv
-      - test:
+      - test: # run test after setup-python-virtualenv finished
           requires:
             - setup-python-virtualenv
