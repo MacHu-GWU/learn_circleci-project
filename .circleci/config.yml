@@ -54,7 +54,8 @@ jobs:
   
   run-test:
     executor: python-docker
-    steps: *restore-repo-and-venv
+    steps:
+      *restore-repo-and-venv
       # - attach_workspace: # restore repository codes, avoid re-checkout
       #     at: repo
       # - restore_cache: # restore venv cache
