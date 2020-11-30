@@ -1,7 +1,14 @@
+# this is not going to work! becaus YAML doesn't allow merging array
+
 version: 2.1
 
 anchors:
-  - &run_pwd run: pwd
+  - run: &say_hello
+      name: say hello
+      command: |
+        echo Hello ${YOUR_NAME}
+      environment:
+        YOUR_NAME: Alice
 
 executors:
   python-docker:
@@ -12,8 +19,11 @@ jobs:
   test:
     executor: python-docker
     steps:
-      - run: pwd
-      - *run_pwd
+      - run: *say_hello
+      - run:
+          <<: *say_hello
+          environment:
+            YOUR_NAME: Bob
 
 workflows:
   my-workflow:
