@@ -1,0 +1,22 @@
+# this is not going to work! becaus YAML doesn't allow merging array
+
+version: 2.1
+
+anchors:
+  - &run_pwd run: pwd
+
+executors:
+  python-docker:
+    docker:
+      - image: python:3.6.12-alpine
+
+jobs:
+  test:
+    executor: python-docker
+    steps:
+      - *run_pwd
+
+workflows:
+  my-workflow:
+    jobs:
+      - test
