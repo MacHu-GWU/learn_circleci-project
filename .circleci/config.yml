@@ -9,8 +9,7 @@ jobs:
   test:
     executor: python-docker
     steps:
-      - &run_pwd run: pwd
-      - *run_pwd
+      - run: pwd
 
 workflows:
   my-workflow:
