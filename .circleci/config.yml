@@ -1,5 +1,8 @@
 version: 2.1
 
+anchors:
+  - &run_pwd run: pwd
+
 executors:
   python-docker:
     docker:
@@ -10,6 +13,7 @@ jobs:
     executor: python-docker
     steps:
       - run: pwd
+      - *run_pwd
 
 workflows:
   my-workflow:
