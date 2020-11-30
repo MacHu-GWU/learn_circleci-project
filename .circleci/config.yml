@@ -62,16 +62,16 @@ jobs:
       # - restore_cache: # restore venv cache
       #     keys:
       #       - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
-      - *attach_workspace
-      - *restore_cache
-      - run: pwd
-      - run: venv/bin/pip install -r repo/.circleci/python/build-test-deploy-example/requirements-test.txt # install addiitional test dependencies
-      - run: # run some test command
-          name: verify if venv exists and dependencies are installed
-          command: |
-            ls venv/bin
-            venv/bin/pip list
-            venv/bin/pytest repo/.circleci/python/build-test-deploy-example/tests -s
+      # - *attach_workspace
+      # - *restore_cache
+      # - run: pwd
+      # - run: venv/bin/pip install -r repo/.circleci/python/build-test-deploy-example/requirements-test.txt # install addiitional test dependencies
+      # - run: # run some test command
+      #     name: verify if venv exists and dependencies are installed
+      #     command: |
+      #       ls venv/bin
+      #       venv/bin/pip list
+      #       venv/bin/pytest repo/.circleci/python/build-test-deploy-example/tests -s
 
 workflows:
   my-workflow:
