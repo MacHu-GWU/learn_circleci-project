@@ -15,10 +15,11 @@ jobs:
   checkout-source-code:
     executor: python-docker
     steps:
-      - run: mkdir -p /tmp/repo
       - run: pwd
+      - run: mkdir -p /tmp/repo
       - checkout:
           path: /tmp/repo
+      - run: pwd
       - persist_to_workspace:
           root: /tmp/repo
           paths:
@@ -29,6 +30,7 @@ jobs:
     steps:
       - attach_workspace: # restore repository codes, avoid re-checkout
           at: /tmp/repo
+      - run: pwd
       - run:
           name: setup python virtualenv
           command: |
@@ -49,6 +51,7 @@ jobs:
       - restore_cache: # restore venv cache
           keys:
             - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
+      - run: pwd
       - run: # run some test command
           name: verify if venv exists and dependencies are installed
           command: |
