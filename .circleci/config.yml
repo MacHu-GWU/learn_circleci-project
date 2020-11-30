@@ -5,10 +5,10 @@
 # - cache: https://circleci.com/docs/2.0/caching/
 # - workspace: https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 
-restore-repo-and-venv: &restore-repo-and-venv
-  - attach_workspace: # restore repository codes, avoid re-checkout
+anchors:
+  - &attach_workspace: # restore repository codes, avoid re-checkout
       at: repo
-  - restore_cache: # restore venv cache
+  - &restore_cache: # restore venv cache
       keys:
         - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
 
@@ -53,12 +53,16 @@ jobs:
   
   run-test:
     executor: python-docker
-    steps: *restore-repo-and-venv # source code stores in ``repo``, virtualenv stores in ``venv``
+    steps: 
+      # Below is using yaml anchor alias. The equavilent syntax is:
+      #
       # - attach_workspace: # restore repository codes, avoid re-checkout
       #     at: repo
       # - restore_cache: # restore venv cache
       #     keys:
       #       - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
+      - *attach_workspace
+      - *restore_cache
       - run: pwd
       - run: venv/bin/pip install -r repo/.circleci/python/build-test-deploy-example/requirements-test.txt # install addiitional test dependencies
       - run: # run some test command
