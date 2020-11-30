@@ -52,7 +52,7 @@ jobs:
           keys:
             - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
       - run: pwd
-      - run: venv/bin/pip install -r repo/.circlecii/python/build-test-deploy-example/requirements-test.txt # install addiitional test dependencies
+      - run: venv/bin/pip install -r repo/.circleci/python/build-test-deploy-example/requirements-test.txt # install addiitional test dependencies
       - run: # run some test command
           name: verify if venv exists and dependencies are installed
           command: |
