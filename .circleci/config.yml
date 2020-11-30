@@ -9,19 +9,19 @@ executors:
   python-docker:
     docker:
       - image: cimg/python:3.6.12
-  working_directory: /tmp
+  # working_directory: /tmp
 
 jobs:
   checkout-source-code:
     executor: python-docker
     steps:
       - run: pwd
-      - run: mkdir -p /tmp/repo
+      - run: mkdir -p repo
       - checkout:
-          path: /tmp/repo
+          path: repo
       - run: pwd
       - persist_to_workspace:
-          root: /tmp/repo
+          root: repo
           paths:
             - "*"
   
@@ -29,7 +29,7 @@ jobs:
     executor: python-docker
     steps:
       - attach_workspace: # restore repository codes, avoid re-checkout
-          at: /tmp/repo
+          at: repo
       - run: pwd
       - run:
           name: setup python virtualenv
@@ -47,7 +47,7 @@ jobs:
     executor: python-docker
     steps:
       - attach_workspace: # restore repository codes, avoid re-checkout
-          at: /tmp/repo
+          at: repo
       - restore_cache: # restore venv cache
           keys:
             - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
