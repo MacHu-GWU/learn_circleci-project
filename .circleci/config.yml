@@ -1,4 +1,6 @@
-# this is not going to work! becaus YAML doesn't allow merging array
+# this exmmple shows how yaml anchor been used for DRY (do not repeat yourself)
+# this feature is yaml native feature, not a circleci feature
+# you should only use this to reuse Mapping ONLY
 
 version: 2.1
 
@@ -22,6 +24,22 @@ jobs:
       - run: *say_hello
       - run:
           <<: *say_hello
+          environment:
+            YOUR_NAME: Bob
+
+  test_equaviilent: # the equavilent job 
+    executor: python-docker
+    steps:
+      - run:
+          name: say hello
+          command: |
+            echo Hello ${YOUR_NAME}
+          environment:
+            YOUR_NAME: Alice
+      - run:
+          name: say hello
+          command: |
+            echo Hello ${YOUR_NAME}
           environment:
             YOUR_NAME: Bob
 
