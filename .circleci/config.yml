@@ -5,13 +5,12 @@
 # - cache: https://circleci.com/docs/2.0/caching/
 # - workspace: https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 
-definitions:
-  steps: &restore-repo-and-venv
-    - attach_workspace: # restore repository codes, avoid re-checkout
-        at: repo
-    - restore_cache: # restore venv cache
-        keys:
-          - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
+restore-repo-and-venv: &restore-repo-and-venv
+  - attach_workspace: # restore repository codes, avoid re-checkout
+      at: repo
+  - restore_cache: # restore venv cache
+      keys:
+        - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
 
 version: 2.1
 
@@ -55,7 +54,7 @@ jobs:
   run-test:
     executor: python-docker
     steps:
-      <<: *restore-repo-and-venv # source code stores in ``repo``, virtualenv stores in ``venv``
+      *restore-repo-and-venv # source code stores in ``repo``, virtualenv stores in ``venv``
       # - attach_workspace: # restore repository codes, avoid re-checkout
       #     at: repo
       # - restore_cache: # restore venv cache
