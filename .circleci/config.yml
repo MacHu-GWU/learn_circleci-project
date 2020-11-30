@@ -1,14 +1,15 @@
 # 1. How to persist source to workspace to avoid git checkout over and over again in multiple jobs
 # 2. How to cache virtual environment for multibple jobs to use
 
-# reference
+# reference:
 # - cache: https://circleci.com/docs/2.0/caching/
 # - workspace: https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
+# - writing yaml: https://circleci.com/docs/2.0/writing-yaml/
 
 anchors:
-  - &attach_workspace: # restore repository codes, avoid re-checkout
+  - &attach_workspace attach_workspace: # restore repository codes, avoid re-checkout
       at: repo
-  - &restore_cache: # restore venv cache
+  - &restore_cache restore_cache: # restore venv cache
       keys:
         - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
 
