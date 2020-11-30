@@ -1,13 +1,15 @@
 # This example demonstrate how to cache a directory or files for future use
 #
 # reference
-# https://circleci.com/docs/2.0/caching/
+# - cache: https://circleci.com/docs/2.0/caching/
+# - workspace: https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 version: 2.1
 
 executors:
   python-docker:
     docker:
       - image: cimg/python:3.6.12
+    working_directory: /tmp
 
 jobs:
   # create virtualenv, insttall dependencies, store to cache for future use
@@ -21,28 +23,29 @@ jobs:
             virtualenv venv
             source venv/bin/activate
             pip install -r .circleci/cache-dependencies/requirements.txt
-      - save_cache:
-          key: venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }}
-          paths:
-            - venv
+            pwd
+      # - save_cache:
+      #     key: venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }} # dynamic cache key
+      #     paths:
+      #       - venv
     
-  test:
-    executor: python-docker
-    steps:
-      - checkout
-      - restore_cache: # restore venv cache
-          keys:
-            - venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }}
-      - run: # run some test command
-          name: verify if venv exists and dependencies are installed
-          command: |
-            ls venv/bin
-            venv/bin/pip list
+  # test:
+  #   executor: python-docker
+  #   steps:
+  #     - checkout
+  #     - restore_cache: # restore venv cache
+  #         keys:
+  #           - venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }} # dynamic cache key
+  #     - run: # run some test command
+  #         name: verify if venv exists and dependencies are installed
+  #         command: |
+  #           ls venv/bin
+  #           venv/bin/pip list
 
 workflows:
   my-workflow:
     jobs:
       - setup-python-virtualenv
-      - test: # run test after setup-python-virtualenv finished
-          requires:
-            - setup-python-virtualenv
+      # - test: # run test after setup-python-virtualenv finished
+      #     requires:
+      #       - setup-python-virtualenv
