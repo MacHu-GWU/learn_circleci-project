@@ -1,85 +1,20 @@
-# 1. How to persist source to workspace to avoid git checkout over and over again in multiple jobs
-# 2. How to cache virtual environment for multibple jobs to use
-
-# reference:
-# - cache: https://circleci.com/docs/2.0/caching/
-# - workspace: https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
-# - writing yaml: https://circleci.com/docs/2.0/writing-yaml/
-
 anchors:
-  - &attach_workspace attach_workspace: # restore repository codes, avoid re-checkout
-      at: repo
-  - &restore_cache restore_cache: # restore venv cache
-      keys:
-        - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
+  - &run_pwd run_pwd: pwd
 
 version: 2.1
 
 executors:
   python-docker:
     docker:
-      - image: cimg/python:3.6.12
+      - image: python:3.6.12-alpine
 
 jobs:
-  checkout-source-code:
+  test:
     executor: python-docker
     steps:
-      - run: pwd
-      - run: mkdir -p repo
-      - checkout:
-          path: repo
-      - run: pwd
-      - persist_to_workspace: # persist repo source code to ${workspace}/repo
-          root: repo
-          paths:
-            - "*"
-  
-  setup-python-virtualenv:
-    executor: python-docker
-    steps:
-      - attach_workspace: # restore repository codes, avoid re-checkout
-          at: repo
-      - run: pwd
-      - run:
-          name: setup python virtualenv
-          command: |
-            pwd
-            virtualenv venv
-            source venv/bin/activate
-            pip install -r repo/.circleci/cache-dependencies/requirements.txt
-      - save_cache: # save venv as cache
-          key: venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
-          paths:
-            - venv
-  
-  run-test:
-    executor: python-docker
-    steps: 
-      # Below is using yaml anchor alias. The equavilent syntax is:
-      #
-      # - attach_workspace: # restore repository codes, avoid re-checkout
-      #     at: repo
-      # - restore_cache: # restore venv cache
-      #     keys:
-      #       - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
-      - *attach_workspace
-      # - *restore_cache
-      - run: pwd
-      # - run: venv/bin/pip install -r repo/.circleci/python/build-test-deploy-example/requirements-test.txt # install addiitional test dependencies
-      # - run: # run some test command
-      #     name: verify if venv exists and dependencies are installed
-      #     command: |
-      #       ls venv/bin
-      #       venv/bin/pip list
-      #       venv/bin/pytest repo/.circleci/python/build-test-deploy-example/tests -s
+      - *run_pwd
 
 workflows:
   my-workflow:
     jobs:
-      - checkout-source-code
-      - setup-python-virtualenv:
-          requires:
-            - checkout-source-code
-      - run-test:
-          requires:
-            - setup-python-virtualenv
+      - test
