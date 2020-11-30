@@ -4,6 +4,7 @@
 # reference
 # - cache: https://circleci.com/docs/2.0/caching/
 # - workspace: https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
+
 version: 2.1
 
 executors:
@@ -20,7 +21,7 @@ jobs:
       - checkout:
           path: repo
       - run: pwd
-      - persist_to_workspace:
+      - persist_to_workspace: # persist repo source code to ${workspace}/repo
           root: repo
           paths:
             - "*"
@@ -38,7 +39,7 @@ jobs:
             virtualenv venv
             source venv/bin/activate
             pip install -r repo/.circleci/cache-dependencies/requirements.txt
-      - save_cache:
+      - save_cache: # save venv as cache
           key: venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
           paths:
             - venv
@@ -58,7 +59,7 @@ jobs:
           command: |
             ls venv/bin
             venv/bin/pip list
-            venv/bin/pytest tests -s
+            venv/bin/pytest repo/.circleci/python/build-test-deploy-example/tests -s
 
 workflows:
   my-workflow:
