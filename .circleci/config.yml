@@ -60,7 +60,7 @@ workflows:
   my-workflow:
     jobs:
       - checkout-source-code
-      - setup-python-virtualenv
+      - setup-python-virtualenv:
           requires:
             - checkout-source-code
       - run-test:
