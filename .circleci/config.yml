@@ -9,44 +9,60 @@ executors:
   python-docker:
     docker:
       - image: cimg/python:3.6.12
-    # working_directory: /tmp
+  working_directory: /tmp
 
 jobs:
-  # create virtualenv, insttall dependencies, store to cache for future use
+  checkout-source-code:
+    executor: python-docker
+    steps:
+      - run: mkdir -p /tmp/repo
+      - run: pwd
+      - checkout:
+          path: /tmp/repo
+      - persist_to_workspace:
+          root: /tmp/repo
+          paths:
+            - "*"
+  
   setup-python-virtualenv:
     executor: python-docker
     steps:
-      - checkout
-      - run: pwd
-      # - run:
-      #     name: setup python virtualenv
-      #     command: |
-      #       virtualenv venv
-      #       source venv/bin/activate
-      #       pip install -r .circleci/cache-dependencies/requirements.txt
-      #       pwd
-      # - save_cache:
-      #     key: venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }} # dynamic cache key
-      #     paths:
-      #       - venv
-    
-  # test:
-  #   executor: python-docker
-  #   steps:
-  #     - checkout
-  #     - restore_cache: # restore venv cache
-  #         keys:
-  #           - venv-cache-{{ checksum ".circleci/cache-dependencies/requirements.txt" }} # dynamic cache key
-  #     - run: # run some test command
-  #         name: verify if venv exists and dependencies are installed
-  #         command: |
-  #           ls venv/bin
-  #           venv/bin/pip list
+      - attach_workspace: # restore repository codes, avoid re-checkout
+          at: /tmp/repo
+      - run:
+          name: setup python virtualenv
+          command: |
+            pwd
+            virtualenv venv
+            source venv/bin/activate
+            pip install -r repo/.circleci/cache-dependencies/requirements.txt
+      - save_cache:
+          key: venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
+          paths:
+            - venv
+  
+  run-test:
+    executor: python-docker
+    steps:
+      - attach_workspace: # restore repository codes, avoid re-checkout
+          at: /tmp/repo
+      - restore_cache: # restore venv cache
+          keys:
+            - venv-cache-{{ checksum "repo/.circleci/python/build-test-deploy-example/requirements.txt" }} # dynamic cache key
+      - run: # run some test command
+          name: verify if venv exists and dependencies are installed
+          command: |
+            ls venv/bin
+            venv/bin/pip list
+
 
 workflows:
   my-workflow:
     jobs:
+      - checkout-source-code
       - setup-python-virtualenv
-      # - test: # run test after setup-python-virtualenv finished
-      #     requires:
-      #       - setup-python-virtualenv
+          requires:
+            - checkout-source-code
+      - run-test:
+          requires:
+            - setup-python-virtualenv
